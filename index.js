@@ -15,7 +15,8 @@ app.use( express.json() )
 app.use( express.urlencoded() )
 app.use( express.static('public'))
 // HTTP request logger middleware (morgan)
-app.use( morgan('tiny') )
+if( app.get('env') == "development" )
+    app.use( morgan('tiny') )
 // Module that helps in securing HTTP headers (helmet)
 app.use( helmet() )
 app.use( (req, rep, next) => logout.logged(req, rep, next)  )
@@ -23,6 +24,7 @@ app.use( (req, rep, next) => {
     console.log("auth")
     next()
 })
+
 
 
 // data
