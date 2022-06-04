@@ -10,7 +10,13 @@
   "author": "Khelifa Yassine",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.1",
+    "joi": "^17.1.1",
     "lodash": "^4.17.21",
-    "mongoose": "^6.3.5"
+    "mongoose": "^6.3.5",
+    "prostam": "^1.0.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.13.4"
   }
 }
