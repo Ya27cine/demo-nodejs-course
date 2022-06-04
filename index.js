@@ -2,6 +2,7 @@ const express   = require('express');
 const helmet    = require('helmet');
 const morgan    = require('morgan');
 const logout    = require('./logged');
+const config    = require('config');
 const Joi       = require('joi')
 
 // Create app :
@@ -101,3 +102,6 @@ const schemaValidateCourse = (course) => {
 
 
 app.listen(4000, () => console.log("server is starting with port ") )
+
+
+//console.log( config.get("mailer.password"))
