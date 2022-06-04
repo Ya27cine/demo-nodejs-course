@@ -26,6 +26,11 @@ app.use( (req, rep, next) => {
     next()
 })
 
+// Template PUG :
+app.set("view engine", 'pug')
+app.set("views", './views')
+
+
 
 
 // data
@@ -37,7 +42,11 @@ let courses = [
 
 // page Home
 app.get('/', (_, rep) => {
-    rep.send("Page Home")
+   // rep.send("Page Home")
+   rep.render('index', {
+       title: "My first page with Pug",
+       content: "Tempor ad exercitation tempor ad esse irure nulla tempor."
+   })
 })
 
 // show courses

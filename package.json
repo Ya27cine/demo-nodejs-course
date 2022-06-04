@@ -17,7 +17,8 @@
     "lodash": "^4.17.21",
     "mongoose": "^6.3.5",
     "morgan": "^1.10.0",
-    "prostam": "^1.0.0"
+    "prostam": "^1.0.0",
+    "pug": "^3.0.2"
   },
   "devDependencies": {
     "jshint": "^2.13.4"
