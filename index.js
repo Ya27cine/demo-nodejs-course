@@ -1,8 +1,20 @@
 const express = require('express');
+const logout = require('./logged');
+
 const app =  express()
 const Joi =  require('joi')
 //const port = process.env || 50000;
-app.use( express.json())
+
+//  Middleware 
+app.use( express.json() )
+app.use( express.urlencoded() )
+app.use( express.static('public'))
+app.use( (req, rep, next) => logout.logged(req, rep, next)  )
+
+app.use( (req, rep, next) => {
+    console.log("auth")
+    next()
+})
 
 // data
 let courses = [
@@ -24,7 +36,10 @@ app.get('/api/courses', (_, rep) => {
 // add a course :
 app.post('/api/courses', (req, rep) => {
     const {error, value} = schemaValidateCourse(  req.body )
-    if(error)   rep.status(400).send( error.details )
+    if(error){
+        rep.status(400).send( error.details )
+        return;
+    }
     // create new course 
     let new_course = {id: new Date().getTime() , title: value.title };
     // push course in courses
@@ -48,7 +63,10 @@ app.put("/api/courses/:id", (req, rep) => {
 app.delete("/api/courses/:id", (req, rep) => {
     // get a course :
     const course =  courses.find(course => course.id == req.params.id)
-    if(!course)     rep.status(404).send("Not Exist !!")
+    if(!course) {
+        rep.status(404).send("Not Exist !!")
+        return;
+    }    
     // get all course expert course(id):
     new_courses =  courses.filter(_ => _.id !== course.id)
     courses = new_courses  
