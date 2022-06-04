@@ -1,20 +1,29 @@
-const express = require('express');
-const logout = require('./logged');
+const express   = require('express');
+const helmet    = require('helmet');
+const morgan    = require('morgan');
+const logout    = require('./logged');
+const Joi       = require('joi')
 
+// Create app :
 const app =  express()
-const Joi =  require('joi')
-//const port = process.env || 50000;
 
-//  Middleware 
+/**
+ *
+ *  Middleware
+ **/   
 app.use( express.json() )
 app.use( express.urlencoded() )
 app.use( express.static('public'))
+// HTTP request logger middleware (morgan)
+app.use( morgan('tiny') )
+// Module that helps in securing HTTP headers (helmet)
+app.use( helmet() )
 app.use( (req, rep, next) => logout.logged(req, rep, next)  )
-
 app.use( (req, rep, next) => {
     console.log("auth")
     next()
 })
+
 
 // data
 let courses = [
