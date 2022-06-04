@@ -23,29 +23,52 @@ app.get('/api/courses', (_, rep) => {
 
 // add a course :
 app.post('/api/courses', (req, rep) => {
-    
-    const schema  = Joi.object({
-        title: Joi.string().alphanum().min(3).max(117)
-    })
-    const {error, value}  =  schema.validate( req.body )
-    if(error){
-        rep.status(400).send( error.details )
-    }
-
+    const {error, value} = schemaValidateCourse(  req.body )
+    if(error)   rep.status(400).send( error.details )
+    // create new course 
     let new_course = {id: new Date().getTime() , title: value.title };
+    // push course in courses
     courses = [new_course, ...courses]
     rep.status(201).send( new_course )
 })
 
+// update a course 
+app.put("/api/courses/:id", (req, rep) => {
+    const {error, value} = schemaValidateCourse(  req.body )
+    if(error) rep.status(400).send( error.details )
+    // get a course :
+    const course =  courses.find(course => course.id == req.params.id)
+    if(!course)     rep.status(404).send("Not Found !!")
+    // update title
+    course.title = value.title;
+    rep.status(200).send( course ) 
+})
+
+// delete a course 
+app.delete("/api/courses/:id", (req, rep) => {
+    // get a course :
+    const course =  courses.find(course => course.id == req.params.id)
+    if(!course)     rep.status(404).send("Not Exist !!")
+    // get all course expert course(id):
+    new_courses =  courses.filter(_ => _.id !== course.id)
+    courses = new_courses  
+    rep.status(204).send( {} ) 
+})
+
 // find a course :
 app.get('/api/courses/:id', (req, rep) => {
-    const course = 
-        courses.find(course => course.id == req.params.id)
-    if(! course)
-        rep.status(404).send("Not Found !!")
-    else    
-        rep.status(200).send( course )
+    const course =  courses.find(course => course.id == req.params.id)
+    if(!course)     rep.status(404).send("Not Found !!")
+    else            rep.status(200).send( course )
 })
+
+const schemaValidateCourse = (course) => {
+    const schema  = 
+        Joi.object({
+            title: Joi.string().alphanum().min(3).max(117)
+        })
+    return schema.validate( course ) 
+}
 
 
 app.listen(4000, () => console.log("server is starting with port ") )
