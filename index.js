@@ -1,9 +1,10 @@
 const express   = require('express');
 const helmet    = require('helmet');
 const morgan    = require('morgan');
-const logout    = require('./logged');
+const logout    = require('./middleware/logged');
 const config    = require('config');
-const Joi       = require('joi')
+const courses   = require('./routers/courses')
+const home      = require('./routers/home')
 
 // Create app :
 const app =  express()
@@ -31,85 +32,12 @@ app.set("view engine", 'pug')
 app.set("views", './views')
 
 
+// Routers :
+app.use('/', home)
+app.use('/api/courses', courses)
 
 
-// data
-let courses = [
-    {id: 0, title: 'Angular'},
-    {id: 1, title: 'ReactJs'},
-    {id: 2, title: 'VueJs'},
-]
-
-// page Home
-app.get('/', (_, rep) => {
-   // rep.send("Page Home")
-   rep.render('index', {
-       title: "My first page with Pug",
-       content: "Tempor ad exercitation tempor ad esse irure nulla tempor."
-   })
-})
-
-// show courses
-app.get('/api/courses', (_, rep) => {
-    rep.send( courses )
-})
-
-// add a course :
-app.post('/api/courses', (req, rep) => {
-    const {error, value} = schemaValidateCourse(  req.body )
-    if(error){
-        rep.status(400).send( error.details )
-        return;
-    }
-    // create new course 
-    let new_course = {id: new Date().getTime() , title: value.title };
-    // push course in courses
-    courses = [new_course, ...courses]
-    rep.status(201).send( new_course )
-})
-
-// update a course 
-app.put("/api/courses/:id", (req, rep) => {
-    const {error, value} = schemaValidateCourse(  req.body )
-    if(error) rep.status(400).send( error.details )
-    // get a course :
-    const course =  courses.find(course => course.id == req.params.id)
-    if(!course)     rep.status(404).send("Not Found !!")
-    // update title
-    course.title = value.title;
-    rep.status(200).send( course ) 
-})
-
-// delete a course 
-app.delete("/api/courses/:id", (req, rep) => {
-    // get a course :
-    const course =  courses.find(course => course.id == req.params.id)
-    if(!course) {
-        rep.status(404).send("Not Exist !!")
-        return;
-    }    
-    // get all course expert course(id):
-    new_courses =  courses.filter(_ => _.id !== course.id)
-    courses = new_courses  
-    rep.status(204).send( {} ) 
-})
-
-// find a course :
-app.get('/api/courses/:id', (req, rep) => {
-    const course =  courses.find(course => course.id == req.params.id)
-    if(!course)     rep.status(404).send("Not Found !!")
-    else            rep.status(200).send( course )
-})
-
-const schemaValidateCourse = (course) => {
-    const schema  = 
-        Joi.object({
-            title: Joi.string().alphanum().min(3).max(117)
-        })
-    return schema.validate( course ) 
-}
-
-
+// start server : 
 app.listen(4000, () => console.log("server is starting with port ") )
 
 
