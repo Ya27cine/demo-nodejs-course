@@ -47,16 +47,19 @@ const  addCourse = async() => {
         name: "Stmfony 4",
         author: "Salim Hamid",
         category: 'Web',
-        tags: ['php'],
+        tags: [],
         isPublished: true,
-        price: 59.99
+        price: 'qw'
     });
     // save 
     try {
         const res = await course_obj.save();
         console.log( res );
     } catch (err) {
-        console.error( err.message )
+        const erros = {};
+        for(field in err.errors)
+            erros[field] =  err.errors[field].message;
+        console.error( erros)
     }
    
 }
