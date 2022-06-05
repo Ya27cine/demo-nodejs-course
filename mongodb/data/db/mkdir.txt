@@ -1,0 +1,6 @@
+1 - docker pull mongo-latest 
+2 - docker run -d -p 2717:27017 -v ~/mongodb:/data/db --name mymongo mongo:latest
+
+check : docker ps 
+
+3 - docker exec -it mymongo  bash  
