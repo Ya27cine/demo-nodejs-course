@@ -44,12 +44,12 @@ const Course = mongoose.model('Course', courseSchema)
 
 const  addCourse = async() => {
     const course_obj = new Course({
-        name: "Stmfony 4",
-        author: "Salim Hamid",
+        name: "Stmfony 5",
+        author: "malim Hamid",
         category: 'Web',
-        tags: [],
+        tags: ['Web'],
         isPublished: true,
-        price: 'qw'
+        price: 76.7
     });
     // save 
     try {

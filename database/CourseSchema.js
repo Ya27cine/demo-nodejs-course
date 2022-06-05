@@ -15,7 +15,8 @@ module.exports  = mongoose.Schema({
         type: String, 
         required: true,
         minlength: 3,
-        maxlength: 250
+        maxlength: 250,
+        uppercase: true // Active [conversion majuscules]
     },
 
     /** field : Category */
@@ -44,6 +45,8 @@ module.exports  = mongoose.Schema({
         type: Number, 
         required: function(){ return this.isPublished} ,
         min: 1,   // min 1$
-        max: 700 // max 700$
+        max: 700, // max 700$
+        set: v => Math.round( v ),
+        get: v => Math.round( v ),
     }
 })
